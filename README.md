@@ -1,3 +1,5 @@
+[![CodeFactor](https://www.codefactor.io/repository/github/jorritfolmer/ta-defender-atp-hunting/badge)](https://www.codefactor.io/repository/github/jorritfolmer/ta-defender-atp-hunting)
+
 # Add-on for Defender ATP Hunting Queries in Splunk
 
 ## What does this add-on for Splunk do?
