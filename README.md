@@ -26,6 +26,7 @@ This add-on works on Linux and Windows
 | 7.1            | Yes   | Yes
 | 7.2            | Yes   | Yes
 | 7.3            | Yes   | Yes
+| 8.0            | Yes   | Yes
 
 ## How do I install this add-on
 

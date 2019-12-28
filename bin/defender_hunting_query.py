@@ -1,3 +1,4 @@
+from builtins import str
 import ta_defender_atp_hunting_declare
 
 import os

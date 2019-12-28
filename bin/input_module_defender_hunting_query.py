@@ -1,18 +1,21 @@
 
 # encoding = utf-8
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
 import os
 import sys
 import time
 import datetime
 import json
-from urllib import urlencode
-from urllib2 import urlopen
-from urllib2 import Request
+from urllib.parse import urlencode
+from urllib.request import urlopen
+from urllib.request import Request
 from urllib2 import urlparse
-from urllib2 import build_opener
-from urllib2 import ProxyHandler
-from urllib2 import install_opener
+from urllib.request import build_opener
+from urllib.request import ProxyHandler
+from urllib.request import install_opener
 
 '''
     IMPORTANT
@@ -55,7 +58,7 @@ def is_proxy(helper):
             return True
         else:
             return False
-    except Exception, e:
+    except Exception as e:
         return False
 
 def get_proxies(helper):
@@ -87,7 +90,7 @@ def get_defender_connectivity(helper, api_endpoint):
         url = "https://login.windows.net/" 
         req = Request(url)
         response = urlopen(req)
-    except Exception, e:
+    except Exception as e:
         raise Exception("Error connecting to %s: %s" % (url, str(e)))
         exit(1)
     else:
@@ -108,7 +111,7 @@ def get_defender_access_token(helper, client_id, secret, tenant_id):
     try:
         url = "https://login.windows.net/%s/oauth2/token" % (tenant_id)
         data = urlencode(body).encode("utf-8")
-    except Exception, e:
+    except Exception as e:
         raise Exception("Error encoding token request body for client_id %s: %s" % (client_id, str(e)))
         exit(1)
     else:
@@ -119,7 +122,7 @@ def get_defender_access_token(helper, client_id, secret, tenant_id):
         try:
             proxies = get_proxies(helper)
             install_opener(build_opener(ProxyHandler(proxies)))
-        except Exception, e:
+        except Exception as e:
             raise Exception("Error setting proxy %s: %s" % (get_proxies(helper), str(e)))
             exit(1)
         else:
@@ -128,7 +131,7 @@ def get_defender_access_token(helper, client_id, secret, tenant_id):
         helper.log_debug("Sending token request to %s" % url)
         req = Request(url, data)
         response = urlopen(req)
-    except Exception, e:
+    except Exception as e:
         raise Exception("Error getting token for client_id %s from %s: %s" % (client_id, url, str(e)))
         exit(1)
     else:
@@ -137,7 +140,7 @@ def get_defender_access_token(helper, client_id, secret, tenant_id):
         try:
             jsonResponse = json.loads(response.read())
             access_token = jsonResponse["access_token"]
-        except Exception, e:
+        except Exception as e:
             raise Exception("Error parsing token response for client_id %s from %s: %s" % (client_id, url, str(e)))
             exit(1)
         else:
@@ -155,7 +158,7 @@ def get_defender_query_results(helper, client_id, access_token, api_endpoint, qu
     try:
         url = "https://%s/api/advancedqueries/run" % api_endpoint
         data = json.dumps({ 'Query' : query }).encode("utf-8")
-    except Exception, e:
+    except Exception as e:
         raise Exception("Error encoding query request body for client_id %s: %s" % (client_id, str(e)))
         exit(1)
     else:
@@ -166,7 +169,7 @@ def get_defender_query_results(helper, client_id, access_token, api_endpoint, qu
         try:
             proxies = get_proxies(helper)
             install_opener(build_opener(ProxyHandler(proxies)))
-        except Exception, e:
+        except Exception as e:
             raise Exception("Error setting proxy %s: %s" % (get_proxies(helper), str(e)))
             exit(1)
         else:
@@ -175,7 +178,7 @@ def get_defender_query_results(helper, client_id, access_token, api_endpoint, qu
         helper.log_debug("Sending query request to %s: %s \n %s\n" % (url, headers, data))
         req = Request(url, data, headers)
         response = urlopen(req)
-    except Exception, e:
+    except Exception as e:
         # 1) Permission for AdvancedQuery.Read.All under WindowsDefenderATP should be granted
         #    under AAD -> App registrations -> WindowsDefenderATPThreatIntelAPI 
         # 2) Grant permissions by admin should also be run because we can't ok this question panel through the API
@@ -187,7 +190,7 @@ def get_defender_query_results(helper, client_id, access_token, api_endpoint, qu
             jsonResponse = json.loads(response.read())
             #schema = jsonResponse["Schema"]
             results = jsonResponse["Results"]
-        except Exception, e:
+        except Exception as e:
             raise Exception("Error parsing query response for client_id %s from %s: %s" % (client_id, url, str(e)))
             exit(1)
         else:
